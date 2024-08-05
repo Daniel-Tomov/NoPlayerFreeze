@@ -1,8 +1,8 @@
 name: NoPlayerFreeze
-version: 1.0
+version: 2.0
 main: me.cageydinosaur.noplayerfreeze.Main
-api-version: 1.20.6
+api-version: 1.20.3
 commands:
   noplayerfreeze:
     usage: /noplayerfreeze
-    description: Toggles freezing of the ticks when no players are online
+    description: Help for the NoPlayerFreeze plugin
