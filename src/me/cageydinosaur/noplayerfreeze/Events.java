@@ -23,7 +23,7 @@ public class Events implements Listener {
 
 	// returns true if all players have ignore permission or are AFK
 	private boolean shouldItBeFrozen() {
-		if (!plugin.toggleFreeze) {
+		if (!this.plugin.toggleFreeze) {
 			return false;
 		}
 
@@ -43,7 +43,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		if (!plugin.toggleFreeze) {
+		if (!this.plugin.toggleFreeze) {
 			return;
 		}
 		if (this.shouldItBeFrozen()) {
@@ -56,7 +56,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!plugin.toggleFreeze) {
+		if (!this.plugin.toggleFreeze) {
 			return;
 		}
 		if (!this.shouldItBeFrozen()) {
@@ -69,11 +69,13 @@ public class Events implements Listener {
 
 	@EventHandler
 	private void onStartComplete(ServerLoadEvent event) {
-		if (!shouldItBeFrozen()) {
+		if (!this.plugin.toggleFreeze) {
 			return;
 		}
-		this.serverTickManager.setFrozen(true);
-		this.plugin.logger.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
-
+		if (this.shouldItBeFrozen()) {
+			this.serverTickManager.setFrozen(true);
+			this.plugin.logger
+					.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
+		}
 	}
 }
