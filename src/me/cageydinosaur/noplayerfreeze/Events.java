@@ -1,6 +1,7 @@
 package me.cageydinosaur.noplayerfreeze;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ServerTickManager;
@@ -22,16 +23,18 @@ public class Events implements Listener {
 	}
 
 	// returns true if all players have ignore permission or are AFK
-	private boolean shouldItBeFrozen() {
+	private boolean shouldItBeFrozen(UUID uuid) {
 		if (!this.plugin.toggleFreeze) {
 			return false;
 		}
 
 		int counter = 0;
 		Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-		for (Player player : players) {
 
-			if (player.hasPermission("noplayerfreeze.ignore")) {
+		for (Player player : players) {
+			if (player.getUniqueId() == uuid) {
+				// here when onPlayerLeave event is fired
+			} else if (player.hasPermission("noplayerfreeze.ignore")) {
 				// hello
 			} else {
 				counter++;
@@ -46,7 +49,7 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
-		if (this.shouldItBeFrozen()) {
+		if (this.shouldItBeFrozen(event.getPlayer().getUniqueId())) {
 			this.serverTickManager.setFrozen(true);
 			this.plugin.logger
 					.info("All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
@@ -59,7 +62,7 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
-		if (!this.shouldItBeFrozen()) {
+		if (!this.shouldItBeFrozen(new UUID(0, 0))) {
 			this.serverTickManager.setFrozen(false);
 			this.plugin.logger
 					.info("A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
@@ -72,7 +75,7 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
-		if (this.shouldItBeFrozen()) {
+		if (this.shouldItBeFrozen(new UUID(0,0))) {
 			this.serverTickManager.setFrozen(true);
 			this.plugin.logger
 					.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
