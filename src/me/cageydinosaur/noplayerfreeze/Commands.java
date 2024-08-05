@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class Commands implements CommandExecutor {
-	Main plugin;
+	private Main plugin;
 
 	public Commands(Main plugin) {
 		this.plugin = plugin;
@@ -28,6 +28,7 @@ public class Commands implements CommandExecutor {
 			
 			if (args[0].equalsIgnoreCase("reload")) {
 				plugin.reload();
+				sender.sendMessage("Reload complete");
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("toggle")) {

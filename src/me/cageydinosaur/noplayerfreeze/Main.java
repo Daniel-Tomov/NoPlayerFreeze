@@ -12,11 +12,16 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		this.getServer().getPluginManager().registerEvents(new Events(this), this);
 		this.getCommand("noplayerfreeze").setExecutor(new Commands(this));
+		getCommand("noplayerfreeze").setTabCompleter(new TabCompletion(this));
 		this.saveDefaultConfig();
 	}
 
 	void reload() {
 		this.reloadConfig();
 		this.toggleFreeze = this.getConfig().getBoolean("toggleFreeze");
+	}
+	
+	boolean debug() {
+		return this.getConfig().getBoolean("debug");
 	}
 }

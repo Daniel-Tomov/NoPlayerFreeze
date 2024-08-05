@@ -1,2 +1,5 @@
 # enable the plugin
 toggleFreeze: true
+
+# debug messages
+debug: false

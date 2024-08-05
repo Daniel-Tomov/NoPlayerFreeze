@@ -14,8 +14,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 
 public class Events implements Listener {
-	Main plugin;
-	ServerTickManager serverTickManager;
+	private Main plugin;
+	private ServerTickManager serverTickManager;
 
 	public Events(Main plugin) {
 		this.plugin = plugin;
@@ -49,10 +49,17 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
+
+		if (event.getPlayer().hasPermission("noplayerfreeze.ignore")) {
+			return;
+		}
+
 		if (this.shouldItBeFrozen(event.getPlayer().getUniqueId())) {
 			this.serverTickManager.setFrozen(true);
-			this.plugin.logger
-					.info("All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+			if (this.plugin.debug()) {
+				this.plugin.logger.info(
+						"All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+			}
 		}
 
 	}
@@ -62,12 +69,18 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
+		
+		if (event.getPlayer().hasPermission("noplayerfreeze.ignore")) {
+			return;
+		}
+		
 		if (!this.shouldItBeFrozen(new UUID(0, 0))) {
 			this.serverTickManager.setFrozen(false);
-			this.plugin.logger
-					.info("A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
+			if (this.plugin.debug()) {
+				this.plugin.logger.info(
+						"A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
+			}
 		}
-
 	}
 
 	@EventHandler
@@ -75,10 +88,12 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
-		if (this.shouldItBeFrozen(new UUID(0,0))) {
+		if (this.shouldItBeFrozen(new UUID(0, 0))) {
 			this.serverTickManager.setFrozen(true);
-			this.plugin.logger
-					.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
+			if (this.plugin.debug()) {
+				this.plugin.logger
+						.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
+			}
 		}
 	}
 }
