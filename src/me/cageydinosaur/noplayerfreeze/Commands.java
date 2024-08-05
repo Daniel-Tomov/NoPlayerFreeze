@@ -20,8 +20,22 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 
-			plugin.toggleFreeze = !plugin.toggleFreeze;
-			sender.sendMessage(ChatColor.GREEN + "The status of NoPlayerFreeze is " + plugin.toggleFreeze);
+			if (args.length == 0) {
+				sender.sendMessage(ChatColor.GREEN + "Usage:");
+				sender.sendMessage(ChatColor.GREEN + "/noplayerfreeze toggle - toggles the plugin");
+				sender.sendMessage(ChatColor.GREEN + "/noplayerfreeze reload - reloads the config");
+			}
+			
+			if (args[0].equalsIgnoreCase("reload")) {
+				plugin.reload();
+				return true;
+			}
+			if (args[0].equalsIgnoreCase("toggle")) {
+				plugin.toggleFreeze = !plugin.toggleFreeze;
+				sender.sendMessage(ChatColor.GREEN + "The status of NoPlayerFreeze is " + plugin.toggleFreeze);
+				return true;
+			}
+			sender.sendMessage(ChatColor.RED + "Unknown command");
 		}
 		return true;
 	}

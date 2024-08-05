@@ -10,30 +10,70 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 
 public class Events implements Listener {
 	Main plugin;
+	ServerTickManager serverTickManager;
 
 	public Events(Main plugin) {
 		this.plugin = plugin;
+		this.serverTickManager = Bukkit.getServerTickManager();
+	}
+
+	// returns true if all players have ignore permission or are AFK
+	private boolean shouldItBeFrozen() {
+		if (!plugin.toggleFreeze) {
+			return false;
+		}
+
+		int counter = 0;
+		Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+		for (Player player : players) {
+
+			if (player.hasPermission("noplayerfreeze.ignore")) {
+				// hello
+			} else {
+				counter++;
+			}
+
+		}
+		return counter == 0;
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		if (plugin.toggleFreeze) {
-			Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-			if (players.size() == 1) {
-				ServerTickManager serverTickManager = Bukkit.getServerTickManager();
-				serverTickManager.setFrozen(true);
-			}
-
+		if (!plugin.toggleFreeze) {
+			return;
 		}
+		if (this.shouldItBeFrozen()) {
+			this.serverTickManager.setFrozen(true);
+			this.plugin.logger
+					.info("All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+		}
+
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		ServerTickManager serverTickManager = Bukkit.getServerTickManager();
-		serverTickManager.setFrozen(false);
+		if (!plugin.toggleFreeze) {
+			return;
+		}
+		if (!this.shouldItBeFrozen()) {
+			this.serverTickManager.setFrozen(false);
+			this.plugin.logger
+					.info("A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
+		}
+
+	}
+
+	@EventHandler
+	private void onStartComplete(ServerLoadEvent event) {
+		if (!shouldItBeFrozen()) {
+			return;
+		}
+		this.serverTickManager.setFrozen(true);
+		this.plugin.logger.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
 
 	}
 }
