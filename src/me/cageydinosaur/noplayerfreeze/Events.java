@@ -63,8 +63,10 @@ public class Events implements Listener {
 
 		if (this.shouldItBeFrozen(event.getPlayer().getUniqueId())) {
 			this.serverTickManager.setFrozen(true);
-			this.plugin.logger.info(
-					"A player left. All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+			if (this.plugin.debug()) {
+				this.plugin.logger.info(
+						"A player left. All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+			}
 			this.lastPlayerToLeave = event.getPlayer().getName();
 		}
 	}
@@ -84,13 +86,17 @@ public class Events implements Listener {
 
 		if (!this.shouldItBeFrozen(new UUID(0, 0))) {
 			this.serverTickManager.setFrozen(false);
-			this.plugin.logger
-					.info("A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
+			if (this.plugin.debug()) {
+				this.plugin.logger.info(
+						"A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
+			}
 
 		} else {
 			this.serverTickManager.setFrozen(true);
-			this.plugin.logger.info(
-					"A player joined. All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+			if (this.plugin.debug()) {
+				this.plugin.logger.info(
+						"A player joined. All players in the server have the noplayerfreeze.ignore permission. The server is frozen.");
+			}
 		}
 	}
 
@@ -100,7 +106,10 @@ public class Events implements Listener {
 			return;
 		}
 		this.serverTickManager.setFrozen(true);
-		this.plugin.logger.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
+		if (this.plugin.debug()) {
+			this.plugin.logger
+					.info("Server is frozen until a player without the noplayerfreeze.ignore permission joins.");
+		}
 		this.plugin.essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
 
 	}
@@ -132,16 +141,19 @@ public class Events implements Listener {
 
 		if (counter == 0) {
 			this.serverTickManager.setFrozen(true);
-			this.plugin.logger.info(
-					"A player went AFK. All players in the server have the noplayerfreeze.ignore permission or are AFK. The server is frozen.");
-
+			if (this.plugin.debug()) {
+				this.plugin.logger.info(
+						"A player went AFK. All players in the server have the noplayerfreeze.ignore permission or are AFK. The server is frozen.");
+			}
 		} else {
 			if (this.lastPlayerToLeave == e.getAffected().getName()) {
 				this.lastPlayerToLeave = "";
 				return;
 			}
 			this.serverTickManager.setFrozen(false);
-			this.plugin.logger.info("A player has gone non-AFK. Unfreezing the server");
+			if (this.plugin.debug()) {
+				this.plugin.logger.info("A player has gone non-AFK. Unfreezing the server");
+			}
 		}
 	}
 }

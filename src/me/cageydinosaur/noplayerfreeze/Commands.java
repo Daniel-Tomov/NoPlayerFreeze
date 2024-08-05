@@ -25,9 +25,10 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage(ChatColor.GREEN + "/noplayerfreeze toggle - toggles the plugin");
 				sender.sendMessage(ChatColor.GREEN + "/noplayerfreeze reload - reloads the config");
 			}
-			
+
 			if (args[0].equalsIgnoreCase("reload")) {
 				plugin.reload();
+				sender.sendMessage("Reload complete");
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("toggle")) {

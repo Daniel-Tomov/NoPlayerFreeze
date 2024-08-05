@@ -3,3 +3,6 @@ toggleFreeze: true
 
 # use essentials afk status for ignoring players in server freezes
 essentials: true
+
+# debug messages
+debug: true
