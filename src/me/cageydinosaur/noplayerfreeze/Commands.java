@@ -31,7 +31,7 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("toggle")) {
-				plugin.toggleFreeze = !plugin.toggleFreeze;
+				this.plugin.toggleFreeze = !plugin.toggleFreeze;
 				sender.sendMessage(ChatColor.GREEN + "The status of NoPlayerFreeze is " + plugin.toggleFreeze);
 				return true;
 			}

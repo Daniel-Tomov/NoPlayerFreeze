@@ -53,6 +53,14 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerLeave(PlayerQuitEvent event) {
+		if (!this.plugin.toggleFreeze) {
+			return;
+		}
+
+		if (event.getPlayer().hasPermission("noplayerfreeze.ignore")) {
+			return;
+		}
+
 		if (this.shouldItBeFrozen(event.getPlayer().getUniqueId())) {
 			this.serverTickManager.setFrozen(true);
 			this.plugin.logger.info(
@@ -74,7 +82,7 @@ public class Events implements Listener {
 			return;
 		}
 
-		if (this.shouldItBeFrozen(new UUID(0, 0))) {
+		if (!this.shouldItBeFrozen(new UUID(0, 0))) {
 			this.serverTickManager.setFrozen(false);
 			this.plugin.logger
 					.info("A player without the noplayerfreeze.ignore permission joined. The server is not frozen.");
@@ -105,11 +113,11 @@ public class Events implements Listener {
 		if (!this.plugin.toggleFreeze) {
 			return;
 		}
-		
+
 		if (Bukkit.getPlayer(e.getAffected().getName()).hasPermission("noplayerfreeze.ignore")) {
 			return; // ignore AFK status of ignored players
 		}
-		
+
 		int counter = 0;
 		Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 		for (Player player : players) {
