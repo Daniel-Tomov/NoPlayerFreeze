@@ -133,23 +133,30 @@ public class Events implements Listener {
 			if (player.hasPermission("noplayerfreeze.ignore")) {
 				// player is ignored
 			} else if (player.getName() == e.getAffected().getName() && e.getValue()) {
-				// player just became AFK
+				// player who triggered the event is AFK
+			} else if (player.getName() == e.getAffected().getName() && !e.getValue()) {
+				// player who triggered the event is not AFK
+				counter++;
+			} else if (this.plugin.essentials.getUser(player).isAfk()) {
+				// the player from the for loop is afk
 			} else {
+				this.plugin.logger.info(player.getName() + " is not AFK");
 				counter++;
 			}
 		}
 
-		if (counter == 0) {
+		if (counter == 0)
+
+		{
 			this.serverTickManager.setFrozen(true);
 			if (this.plugin.debug()) {
 				this.plugin.logger.info(
 						"A player went AFK. All players in the server have the noplayerfreeze.ignore permission or are AFK. The server is frozen.");
 			}
-		} else {
-			if (this.lastPlayerToLeave == e.getAffected().getName()) {
-				this.lastPlayerToLeave = "";
-				return;
-			}
+		} else if (this.lastPlayerToLeave == e.getAffected().getName()) {
+			this.lastPlayerToLeave = "";
+			return;
+		} else if (this.serverTickManager.isFrozen()) {
 			this.serverTickManager.setFrozen(false);
 			if (this.plugin.debug()) {
 				this.plugin.logger.info("A player has gone non-AFK. Unfreezing the server");
